@@ -1,9 +1,7 @@
-<script setup lang="ts"></script>
+<script setup></script>
 
 <template>
   <div>
-    Page: index
+    <h1>CRUD de usuários Nuxt.js</h1>
   </div>
 </template>
-
-<style scoped></style>

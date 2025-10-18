@@ -2,7 +2,7 @@
 
 <template>
   <div>
-    Page: ListUsersView
+    Page: Listagem de usuarios
   </div>
 </template>
 
