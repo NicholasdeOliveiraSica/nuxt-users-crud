@@ -2,10 +2,9 @@
 
 <template>
 
-  <div>
-    <Hero />
+  <div class="min-h-screen flex flex-col items-center">
+    <img src="../assets/hero-image.jpg" alt="hero-image">
     <NuxtPage />
-    <TheFooter />
   </div>
 
 </template>
