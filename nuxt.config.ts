@@ -14,5 +14,10 @@ export default defineNuxtConfig({
       ]
     }
   },
-  css: ['@/assets/css/main.css']
+  css: ['@/assets/css/main.css'],
+  runtimeConfig: {
+    public: {
+      apiBase: 'https://68f972faef8b2e621e7c199d.mockapi.io'
+    }
+  }
 })

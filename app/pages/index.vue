@@ -1,4 +1,7 @@
-<script setup></script>
+<script setup>
+  import { useUser as store } from '../composables/useUsers'
+  onMounted(store.getUsers())
+</script>
 
 <template>
   <div>
