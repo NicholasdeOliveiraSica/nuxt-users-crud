@@ -1,7 +1,7 @@
 
-const config = useRuntimeConfig()
+export const useUsers = () => {
 
-export const useUser = () => {
+  const config = useRuntimeConfig()
 
   const API_URL = config.public.apiBase
   const users = ref([])
