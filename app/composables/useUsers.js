@@ -11,7 +11,7 @@ export const useUsers = () => {
   const getUsers = async () => {
     loading.value = true
     error.value = null
-
+    
     try {
       const data = await $fetch(`${API_URL}/usuarios`)
       users.value = data
