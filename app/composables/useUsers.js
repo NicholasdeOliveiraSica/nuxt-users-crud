@@ -1,9 +1,8 @@
 
 export const useUsers = () => {
-
   const config = useRuntimeConfig()
-
   const API_URL = config.public.apiBase
+
   const users = ref([])
   const loading = ref(false)
   const error = ref(null)
@@ -24,7 +23,6 @@ export const useUsers = () => {
     } finally {
       loading.value = false
     }
-    
   }
 
   return {

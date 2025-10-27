@@ -1,7 +1,10 @@
 <script setup>
 import { useUsers } from '../composables/useUsers'
+import { useJobs } from '../composables/useJobs'
 
 const { users, loading, error, getUsers } = useUsers()
+
+const { allJobs } = useJobs()
 
 onMounted(() => {
   getUsers()
@@ -13,13 +16,18 @@ onMounted(() => {
 
   <div class="flex flex-col justify-center items-center mt-10">
 
-    <div class="flex flex-col gap-3 w-124 text-center">
+    <div class="flex flex-col gap-3 w-full max-w-80 lg:max-w-124 md:max-w-124 text-center">
       <h1 class="text-4xl font-bold">Lista de usuários cadastrados</h1>
-      <UButton color="primary" variant="outline" class="w-full text-xl cursor-pointer">Novo usuário</UButton>
+      <UButton color="primary" variant="outline" class="w-full text-xl">Novo usuário</UButton>
     </div>
-
     
-    <div v-if="loading" class="grid grid-cols-3 gap-7">
+<!--     <select name="profissões" id="job">
+      <option v-for="job in allJobs" :key="job.code">
+        Profissão: {{ job.name }}
+      </option>
+    </select> -->
+    
+    <div v-if="loading" class="grid grid-cols-3 gap-7 m-10">
       <div class="flex items-center gap-4" v-for="n in 15" :key="n">
         <USkeleton class="h-16 w-16 rounded-lg" />
         <div class="grid gap-2 flex-1">
@@ -31,19 +39,32 @@ onMounted(() => {
     </div>
 
     
-    <div v-else-if="error">Erro: {{ error }}</div>
+    <UAlert 
+      v-else-if="error" 
+      color="error" 
+      variant="subtle"
+      title="Erro ao carregar usuários"
+      :description="error"
+    >
+      <template #actions>
+        <UButton @click="getUsers" color="error" variant="outline">
+          Tentar novamente
+        </UButton>
+      </template>
+    </UAlert>
 
-    <div v-else class="grid grid-cols-3 m-10 gap-5">
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 m-10 gap-5">
       <UserCard 
         v-for="user in users" 
         :key="user.id" 
         :name="user.name"
-        :cell="user.cell"
+        :phone="user.phone"
         :sex="user.sex"
         :active="user.active"
         :avatar="user.img"
         />
     </div>
+
 
   </div>
 
