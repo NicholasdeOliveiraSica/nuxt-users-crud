@@ -10,7 +10,6 @@ export const useJobs = () => {
   }))
 
   return {
-    allJobs,
     newJobs
   }
 }

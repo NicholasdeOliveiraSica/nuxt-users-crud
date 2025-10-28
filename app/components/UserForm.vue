@@ -1,9 +1,11 @@
 <script setup>
 
 import * as yup from 'yup'
-import { newJobs } from '@/composables/useJobs'
+import { useJobs } from '@/composables/useJobs'
 import { interesses } from '@/assets/interesses.json'
 
+
+const { newJobs } = useJobs()
 const Uinteresses = interesses.map(item => ({
   value: item,
   label: item
@@ -73,7 +75,7 @@ const handleSubmit = async () => {
   try {
     await schema.validate(formData.value, { abortEarly: false})
     errors.value = {}
-    emit('submit', FormData.value)
+    emit('submit', formData.value)
   } catch (err) {
     err.inner.forEach((error) => {
       errors.value[error.path] = error.message
@@ -90,29 +92,29 @@ const handleSubmit = async () => {
       <template #header>
         <h1>Complete os campos para cadastro!</h1>
       </template>
-      <UForm :schema="schema" :state="formData" @submit.prevent="handleSubmit">
+      <UForm :state="formData" @submit.prevent="handleSubmit" :validate-on="['submit']">
 
         <UFormField label="Nome *" name="name" :error="errors.name">
           <UInput v-model="formData.name" type="text"/>
         </UFormField>
 
-        <UFormField label="Email *" name="email" class="w-full" :error="errors.name">
+        <UFormField label="Email *" name="email" class="w-full" :error="errors.email">
           <UInput v-model="formData.email" type="email" />
         </UFormField>
 
-        <UFormField label="Telefone * *" name="phone"  class="w-full" :error="errors.name">
+        <UFormField label="Telefone * *" name="phone"  class="w-full" :error="errors.phone">
           <UInput v-model="formData.phone" v-mask="'(##) #####-####'" type="tell" placeholder="(11) 98765-4321"/>
         </UFormField>
 
-        <UFormField label="CPF ou CNPJ *" name="cpf"  class="w-full" :error="errors.name">
+        <UFormField label="CPF ou CNPJ *" name="cpf"  class="w-full" :error="errors.cpf">
           <UInput v-model="formData.cpf" type="text" v-mask="cpfMask" placeholder="CPF ou CNPJ"/>
         </UFormField>
         
-        <UFormField label="Data de nascimento *" name="birth date" class="w-full" :error="errors.name"> 
+        <UFormField label="Data de nascimento *" name="birth date" class="w-full" :error="errors.birthDate"> 
           <UInput v-model="formData.birthDate" type="date"/>
         </UFormField>
         
-        <UFormField label="Gênero *" name="sex" class="w-full" :error="errors.name">
+        <UFormField label="Gênero *" name="sex" class="w-full" :error="errors.sex">
           <URadioGroup
             v-model="formData.sex"
             :items="[
@@ -122,22 +124,28 @@ const handleSubmit = async () => {
           />
         </UFormField>
 
-        <UFormField label="Trabalho *" name="Job" class="w-full" :error="errors.name">
+        <UFormField label="Trabalho *" name="Job" class="w-full" :error="errors.job">
           <USelect v-model="formData.job" :items="myJobs" class="w-full" />
         </UFormField>
 
-        <UFormField label="Trabalho exemplo" name="example jobs" class="w-full" :error="errors.name">
-          <USelect :items="newJobs" class="w-full" />
+        <UFormField label="Profissão *" name="job" :error="errors.job">
+          <UInput 
+            placeholder="Digite para buscar..."
+            list="profissoes"
+          />
+          <datalist id="profissoes">
+            <option v-for="job in newJobs" :value="job.label" />
+          </datalist>
         </UFormField>
 
-        <UFormField label="Interesses" :error="errors.name">
+        <UFormField label="Interesses" :error="errors.interests">
           <UCheckboxGroup
             v-model="formData.interests"
             :items="Uinteresses"
-          />
+          />  
         </UFormField>
 
-        <UFormField label="Observações" name="obs" :error="errors.name">
+        <UFormField label="Observações" name="obs" :error="errors.obs">
           <UTextarea 
             v-model="formData.obs" 
             :maxlength="200"
@@ -145,14 +153,12 @@ const handleSubmit = async () => {
           />
         </UFormField>
 
-        <UFormField label="Status" name="active" :error="errors.name">
+        <UFormField label="Status" name="active" :error="errors.active">
           <USwitch v-model="formData.active" />
         </UFormField>
 
-        <template #footer>
-          <UButton @click="emit('cancel')">Cancelar</UButton>
-          <UButton type="submit">Salvar</UButton>
-        </template>
+        <UButton @click="emit('cancel')">Cancelar</UButton>
+        <UButton type="submit">Salvar</UButton>
       </UForm>
     </UCard>
 

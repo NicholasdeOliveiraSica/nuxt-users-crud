@@ -29,7 +29,7 @@ export const useUsers = () => {
     loading.value = true
     try {
       const response = await $fetch(`${API_URL}/usuarios`, {
-        method: POST,
+        method: 'POST',
         body: userData
       })
       console.log(response)

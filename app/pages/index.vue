@@ -1,36 +1,34 @@
 <script setup>
 import { useUsers } from '../composables/useUsers'
 
-const { users, loading, error, getUsers } = useUsers()
+const { users, loading, error, getUsers, createUser } = useUsers()
 const isModalOpen = ref(false)
 const createError = ref(null)
 
 const handleCreateUser = async (userData) => {
   try {
     await createUser(userData)
-    
   } catch (err) {
     createError.value = err
   } finally {
     await getUsers()
     isModalOpen.value = false
   }
-
 }
 
 onMounted(() => {
   getUsers()
-}
-)
+})
 </script>
 
 <template>
-
   <div class="flex flex-col justify-center items-center mt-10">
 
     <div class="flex flex-col gap-3 w-full max-w-80 lg:max-w-124 md:max-w-124 text-center">
       <h1 class="text-4xl font-bold">Lista de usuários cadastrados</h1>
-      <UButton color="primary" variant="outline" class="w-full text-xl" @click="isModalOpen = true" >Novo usuário</UButton>
+      <UButton color="primary" variant="outline" class="w-full text-xl" @click="isModalOpen = true">
+        Novo usuário
+      </UButton>
     </div>
     
     <div v-if="loading" class="grid grid-cols-3 gap-7 m-10">
@@ -44,7 +42,6 @@ onMounted(() => {
       </div>
     </div>
 
-    
     <UAlert 
       v-else-if="error" 
       color="error" 
@@ -68,17 +65,28 @@ onMounted(() => {
         :sex="user.sex"
         :active="user.active"
         :avatar="user.img"
-        />
+      />
     </div>
 
-    <UModal v-model="isModalOpen">
-      <p v-if="createError"> {{ createError }} </p>
+    <UModal 
+      v-if="isModalOpen" 
+      v-model="isModalOpen"
+      :ui="{
+        overlay: {
+          base: 'fixed inset-0 bg-gray-950/75 z-[9999]'
+        },
+        wrapper: 'fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto p-4'
+      }"
+    >
+      <UAlert v-if="createError" color="error" class="mb-4">
+        {{ createError }}
+      </UAlert>
+      
       <UserForm
-      @submit="handleCreateUser"
-      @cancel="isModalOpen = false"
-       />
-    </UModal>   
+        @submit="handleCreateUser"
+        @cancel="isModalOpen = false"
+      />
+    </UModal>
 
   </div>
-
 </template>
