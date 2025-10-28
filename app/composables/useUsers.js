@@ -26,7 +26,18 @@ export const useUsers = () => {
   }
 
   const createUser = async (userData) => {
-    console.log('user created: ' + userData)
+    loading.value = true
+    try {
+      const response = await $fetch(`${API_URL}/usuarios`, {
+        method: POST,
+        body: userData
+      })
+      console.log(response)
+    } catch (error) {
+      
+    } finally {
+      loading.value = false
+    }
   }
 
 

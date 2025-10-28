@@ -3,10 +3,19 @@ import { useUsers } from '../composables/useUsers'
 
 const { users, loading, error, getUsers } = useUsers()
 const isModalOpen = ref(false)
+const createError = ref(null)
 
 const handleCreateUser = async (userData) => {
-  await getUsers()
-  isModalOpen.value = false
+  try {
+    await createUser(userData)
+    
+  } catch (err) {
+    createError.value = err
+  } finally {
+    await getUsers()
+    isModalOpen.value = false
+  }
+
 }
 
 onMounted(() => {
@@ -62,7 +71,8 @@ onMounted(() => {
         />
     </div>
 
-    <UModal v-show="isModalOpen" class="fixed inset-0 z-50">
+    <UModal v-model="isModalOpen">
+      <p v-if="createError"> {{ createError }} </p>
       <UserForm
       @submit="handleCreateUser"
       @cancel="isModalOpen = false"
