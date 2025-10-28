@@ -25,10 +25,16 @@ export const useUsers = () => {
     }
   }
 
+  const createUser = async (userData) => {
+    console.log('user created: ' + userData)
+  }
+
+
   return {
     users,
     loading,
     error,
-    getUsers
+    getUsers,
+    createUser
   }
 }

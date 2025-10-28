@@ -1,10 +1,13 @@
 <script setup>
 import { useUsers } from '../composables/useUsers'
-import { useJobs } from '../composables/useJobs'
 
 const { users, loading, error, getUsers } = useUsers()
+const isModalOpen = ref(false)
 
-const { allJobs } = useJobs()
+const handleCreateUser = async (userData) => {
+  await getUsers()
+  isModalOpen.value = false
+}
 
 onMounted(() => {
   getUsers()
@@ -18,14 +21,8 @@ onMounted(() => {
 
     <div class="flex flex-col gap-3 w-full max-w-80 lg:max-w-124 md:max-w-124 text-center">
       <h1 class="text-4xl font-bold">Lista de usuários cadastrados</h1>
-      <UButton color="primary" variant="outline" class="w-full text-xl">Novo usuário</UButton>
+      <UButton color="primary" variant="outline" class="w-full text-xl" @click="isModalOpen = true" >Novo usuário</UButton>
     </div>
-    
-<!--     <select name="profissões" id="job">
-      <option v-for="job in allJobs" :key="job.code">
-        Profissão: {{ job.name }}
-      </option>
-    </select> -->
     
     <div v-if="loading" class="grid grid-cols-3 gap-7 m-10">
       <div class="flex items-center gap-4" v-for="n in 15" :key="n">
@@ -65,6 +62,12 @@ onMounted(() => {
         />
     </div>
 
+    <UModal v-show="isModalOpen" class="fixed inset-0 z-50">
+      <UserForm
+      @submit="handleCreateUser"
+      @cancel="isModalOpen = false"
+       />
+    </UModal>   
 
   </div>
 
