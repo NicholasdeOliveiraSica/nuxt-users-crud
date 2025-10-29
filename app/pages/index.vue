@@ -22,6 +22,9 @@ onMounted(() => {
 </script>
 
 <template>
+
+  <img src="../assets/hero-image.jpg" alt="hero-image" class="rounded-4xl mt-15">
+
   <div class="flex flex-col justify-center items-center mt-10">
 
     <div class="flex flex-col gap-3 w-full max-w-80 lg:max-w-124 md:max-w-124 text-center">
@@ -68,24 +71,20 @@ onMounted(() => {
       />
     </div>
 
-    <UModal 
-      v-if="isModalOpen" 
-      v-model="isModalOpen"
-      :ui="{
-        overlay: {
-          base: 'fixed inset-0 bg-gray-950/75 z-[9999]'
-        },
-        wrapper: 'fixed inset-0 z-[9999] flex items-center justify-center overflow-y-auto p-4'
-      }"
-    >
-      <UAlert v-if="createError" color="error" class="mb-4">
-        {{ createError }}
-      </UAlert>
-      
-      <UserForm
-        @submit="handleCreateUser"
-        @cancel="isModalOpen = false"
-      />
+    <UModal v-model:open="isModalOpen">
+      <template #header>
+        <h1 class="text-2xl font-bold">Complete os campos para cadastro!</h1>
+      </template>
+      <template #body>
+        <UAlert v-if="createError" color="error" class="mb-4">
+          {{ createError }}
+        </UAlert>
+
+        <UserForm
+          @submit="handleCreateUser"
+          @cancel="isModalOpen = false"
+        />
+      </template>
     </UModal>
 
   </div>

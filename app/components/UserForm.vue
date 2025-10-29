@@ -53,11 +53,6 @@ const myJobs = [
 
 ]
 
-const cpfMask = computed(() => {
-  const numbers = formData.value.cpf.replace(/\D/g, '')
-  return numbers.length > 11 ? '##.###.###/####-##' : '###.###.###-##'
-})
-
 const schema = yup.object({
   name: yup.string().required('Campo obrigatório'),
   email: yup.string().email('Escreva um email válido').required('Campo obrigatório'),
@@ -88,26 +83,22 @@ const handleSubmit = async () => {
 <template>
   <div>
 
-    <UCard>
-      <template #header>
-        <h1>Complete os campos para cadastro!</h1>
-      </template>
-      <UForm :state="formData" @submit.prevent="handleSubmit" :validate-on="['submit']">
+      <UForm :state="formData" @submit.prevent="handleSubmit" :validate-on="['submit']" class="text-xl">
 
-        <UFormField label="Nome *" name="name" :error="errors.name">
-          <UInput v-model="formData.name" type="text"/>
+        <UFormField label="Nome *" name="name" :error="errors.name" class="w-full">
+          <UInput v-model="formData.name" type="text" class="w-full" />
         </UFormField>
 
-        <UFormField label="Email *" name="email" class="w-full" :error="errors.email">
-          <UInput v-model="formData.email" type="email" />
+        <UFormField label="Email *" name="email" class="w-full" :error="errors.email" >
+          <UInput v-model="formData.email" type="email" class="w-full" />
         </UFormField>
 
         <UFormField label="Telefone * *" name="phone"  class="w-full" :error="errors.phone">
-          <UInput v-model="formData.phone" v-mask="'(##) #####-####'" type="tell" placeholder="(11) 98765-4321"/>
+          <UInput v-model="formData.phone" v-mask="['(##) ####-####', '(##) #####-####']" type="text" placeholder="(11) 98765-4321" class="w-full"/>
         </UFormField>
 
         <UFormField label="CPF ou CNPJ *" name="cpf"  class="w-full" :error="errors.cpf">
-          <UInput v-model="formData.cpf" type="text" v-mask="cpfMask" placeholder="CPF ou CNPJ"/>
+          <UInput v-model="formData.cpf" type="text" v-mask="['###.###.###-##', '##.###.###/####-##']" placeholder="CPF ou CNPJ" class="w-full"/>
         </UFormField>
         
         <UFormField label="Data de nascimento *" name="birth date" class="w-full" :error="errors.birthDate"> 
@@ -157,10 +148,8 @@ const handleSubmit = async () => {
           <USwitch v-model="formData.active" />
         </UFormField>
 
-        <UButton @click="emit('cancel')">Cancelar</UButton>
+        <UButton @click="emit('cancel')" type="button">Cancelar</UButton>
         <UButton type="submit">Salvar</UButton>
       </UForm>
-    </UCard>
-
   </div>
 </template>
