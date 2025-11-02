@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxt/ui', '@nuxt/image'],
   
-  css: ['~/assets/css/main.css'], // ← ADICIONE ESTA LINHA
+  css: ['~/assets/css/main.css'],
   
   app: {
     head: {

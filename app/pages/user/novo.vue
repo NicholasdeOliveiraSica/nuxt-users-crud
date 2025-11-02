@@ -1,6 +1,7 @@
 <script setup>
 
 const open = ref(false)
+const number = ref('')
 
 </script>
 
@@ -16,11 +17,12 @@ const open = ref(false)
 
             <template #body>
                 <UCard>
-                    <p>aiaiaiai, agora funciona né</p>
+                    <UInput v-model="number" v-maska data-maska="'(##) #####-####'" />
                 </UCard>
             </template>
 
             <template #footer>
+                {{ number }}
                 <UButton @click="open = false">Fechar</UButton>
             </template>
         </UModal>

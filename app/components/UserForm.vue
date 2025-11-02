@@ -56,7 +56,7 @@ const myJobs = [
 const schema = yup.object({
   name: yup.string().required('Campo obrigatório'),
   email: yup.string().email('Escreva um email válido').required('Campo obrigatório'),
-  phone: yup.string().min(20, 'Número inválido').required('Campo obrigatório'),
+  phone: yup.string().min(19, 'Número inválido').required('Campo obrigatório'),
   cpf: yup.string().min(14, 'CPF ou CNPJ inválido').required('Campo obrigatório'),
   birthDate: yup.string().min(10, 'error in date').required('Campo obrigatório'),
   sex: yup.string().oneOf(['Homem', 'Mulher'], 'error in radio bttn').required('Campo obrigatório'),
@@ -76,6 +76,7 @@ const handleSubmit = async () => {
       errors.value[error.path] = error.message
     })
   }
+
 }
 
 </script>
@@ -86,34 +87,37 @@ const handleSubmit = async () => {
       <UForm :state="formData" @submit.prevent="handleSubmit" :validate-on="['submit']" class="text-xl">
 
         <UFormField label="Nome *" name="name" :error="errors.name" class="w-full">
-          <UInput v-model="formData.name" type="text" class="w-full" />
-        </UFormField>
+          <UInput v-model="formData.name" type="text" class="w-full"/>
+        </UFormField> {{ formData.name.toCapitalize }}
 
         <UFormField label="Email *" name="email" class="w-full" :error="errors.email" >
           <UInput v-model="formData.email" type="email" class="w-full" />
         </UFormField>
 
-        <UFormField label="Telefone * *" name="phone"  class="w-full" :error="errors.phone">
-          <UInput v-model="formData.phone" v-mask="['(##) ####-####', '(##) #####-####']" type="text" placeholder="(11) 98765-4321" class="w-full"/>
+        <UFormField label="Telefone *" name="phone"  class="w-full" :error="errors.phone">
+          <UInput v-model="formData.phone" v-maska data-maska="['+55 (##) ####-####', '+55 (##) #####-####']" type="text" placeholder="(11) 98765-4321" class="w-full"/>
         </UFormField>
 
         <UFormField label="CPF ou CNPJ *" name="cpf"  class="w-full" :error="errors.cpf">
-          <UInput v-model="formData.cpf" type="text" v-mask="['###.###.###-##', '##.###.###/####-##']" placeholder="CPF ou CNPJ" class="w-full"/>
+          <UInput v-model="formData.cpf" type="text" v-maska data-maska="['###.###.###-##', '##.###.###/####-##']" placeholder="CPF ou CNPJ" class="w-full"/>
         </UFormField>
         
-        <UFormField label="Data de nascimento *" name="birth date" class="w-full" :error="errors.birthDate"> 
-          <UInput v-model="formData.birthDate" type="date"/>
-        </UFormField>
+        <div class="flex w-full justify-between">
+          <UFormField label="Gênero *" name="sex" class="w-full" :error="errors.sex">
+            <URadioGroup
+              v-model="formData.sex"
+              :items="[
+                { label: 'Homem', value: 'Homem' },
+                { label: 'Mulher', value: 'Mulher' }
+              ]"
+            />{{ formData.sex }}
+          </UFormField> 
+          
+          <UFormField label="Data de nascimento *" name="birth date" class="w-full" :error="errors.birthDate">
+            <UInput v-model="formData.birthDate" type="date" class="w-full h-10"/>
+          </UFormField>
+        </div>
         
-        <UFormField label="Gênero *" name="sex" class="w-full" :error="errors.sex">
-          <URadioGroup
-            v-model="formData.sex"
-            :items="[
-              { label: 'Homem', value: 'Homem' },
-              { label: 'Mulher', value: 'Mulher' }
-            ]"
-          />
-        </UFormField>
 
         <UFormField label="Trabalho *" name="Job" class="w-full" :error="errors.job">
           <USelect v-model="formData.job" :items="myJobs" class="w-full" />
