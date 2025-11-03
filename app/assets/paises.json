@@ -1,0 +1,202 @@
+[
+  {
+    "label": "+55",
+    "value": "brasil",
+    "country": "Brasil",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/br.png",
+      "alt": "Brasil flag"
+    },
+    "mask": "(##) #####-####"
+  },
+  {
+    "label": "+1",
+    "value": "eua",
+    "country": "Estados Unidos",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/us.png",
+      "alt": "Estados Unidos flag"
+    },
+    "mask": "(###) ###-####"
+  },
+  {
+    "label": "+1",
+    "value": "canada",
+    "country": "Canadá",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/ca.png",
+      "alt": "Canadá flag"
+    },
+    "mask": "(###) ###-####"
+  },
+  {
+    "label": "+49",
+    "value": "alemanha",
+    "country": "Alemanha",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/de.png",
+      "alt": "Alemanha flag"
+    },
+    "mask": "(###) ###-####"
+  },
+  {
+    "label": "+54",
+    "value": "argentina",
+    "country": "Argentina",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/ar.png",
+      "alt": "Argentina flag"
+    },
+    "mask": "(##) ####-####"
+  },
+  {
+    "label": "+61",
+    "value": "australia",
+    "country": "Austrália",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/au.png",
+      "alt": "Austrália flag"
+    },
+    "mask": "# ####-####"
+  },
+  {
+    "label": "+32",
+    "value": "belgica",
+    "country": "Bélgica",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/be.png",
+      "alt": "Bélgica flag"
+    },
+    "mask": "(###) ###-###"
+  },
+  {
+    "label": "+56",
+    "value": "chile",
+    "country": "Chile",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/cl.png",
+      "alt": "Chile flag"
+    },
+    "mask": "# ####-####"
+  },
+  {
+    "label": "+86",
+    "value": "china",
+    "country": "China",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/cn.png",
+      "alt": "China flag"
+    },
+    "mask": "(###) ####-####"
+  },
+  {
+    "label": "+57",
+    "value": "colombia",
+    "country": "Colômbia",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/co.png",
+      "alt": "Colômbia flag"
+    },
+    "mask": "(###) ###-####"
+  },
+  {
+    "label": "+82",
+    "value": "coreia-sul",
+    "country": "Coreia do Sul",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/kr.png",
+      "alt": "Coreia do Sul flag"
+    },
+    "mask": "##-###-####"
+  },
+  {
+    "label": "+34",
+    "value": "espanha",
+    "country": "Espanha",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/es.png",
+      "alt": "Espanha flag"
+    },
+    "mask": "(###) ###-###"
+  },
+  {
+    "label": "+33",
+    "value": "franca",
+    "country": "França",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/fr.png",
+      "alt": "França flag"
+    },
+    "mask": "(###) ###-###"
+  },
+  {
+    "label": "+91",
+    "value": "india",
+    "country": "Índia",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/in.png",
+      "alt": "Índia flag"
+    },
+    "mask": "(####) ###-###"
+  },
+  {
+    "label": "+39",
+    "value": "italia",
+    "country": "Itália",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/it.png",
+      "alt": "Itália flag"
+    },
+    "mask": "(###) ####-###"
+  },
+  {
+    "label": "+81",
+    "value": "japao",
+    "country": "Japão",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/jp.png",
+      "alt": "Japão flag"
+    },
+    "mask": "##-####-####"
+  },
+  {
+    "label": "+52",
+    "value": "mexico",
+    "country": "México",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/mx.png",
+      "alt": "México flag"
+    },
+    "mask": "(###) ###-####"
+  },
+  {
+    "label": "+351",
+    "value": "portugal",
+    "country": "Portugal",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/pt.png",
+      "alt": "Portugal flag"
+    },
+    "mask": "##-###-####"
+  },
+  {
+    "label": "+44",
+    "value": "reino-unido",
+    "country": "Reino Unido",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/gb.png",
+      "alt": "Reino Unido flag"
+    },
+    "mask": "##-####-####"
+  },
+  {
+    "label": "+7",
+    "value": "russia",
+    "country": "Rússia",
+    "avatar": {
+      "src": "https://flagcdn.com/w20/ru.png",
+      "alt": "Rússia flag"
+    },
+    "mask": "(###) ###-##-##"
+  }
+]

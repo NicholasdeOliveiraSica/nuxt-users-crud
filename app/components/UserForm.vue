@@ -1,15 +1,35 @@
+
 <script setup>
 
 import * as yup from 'yup'
 import { useJobs } from '@/composables/useJobs'
-import { interesses } from '@/assets/interesses.json'
+import { interesses as listInteresses } from '@/assets/interesses.json'
+import countryList from '@/assets/paises.json'
 
+const countries = countryList
+const selCountryValue = ref('eua')
+
+const selCountry = computed(() => countries.find(item => item.value === selCountryValue.value))
+const currentMaska = computed(() => selCountry.value.mask)
+
+watch(selCountryValue, () => {
+  formData.value.phone = ''
+})
 
 const { newJobs } = useJobs()
-const Uinteresses = interesses.map(item => ({
+const interesses = listInteresses.map((item, index) => ({
+  index: index,
   value: item,
   label: item
 }))
+const sumInteresses = 5
+const numInteresses = ref(4)
+const nowInteresses = computed(() => interesses.filter(item => item.index <= numInteresses.value))
+
+onMounted(() => {
+  console.log(nowInteresses.value)
+})
+
 const errors = ref({})
 const emit = defineEmits(['cancel', 'submit'])
 const formData = ref({
@@ -88,14 +108,26 @@ const handleSubmit = async () => {
 
         <UFormField label="Nome *" name="name" :error="errors.name" class="w-full">
           <UInput v-model="formData.name" type="text" class="w-full"/>
-        </UFormField> {{ formData.name.toCapitalize }}
+        </UFormField>
 
         <UFormField label="Email *" name="email" class="w-full" :error="errors.email" >
           <UInput v-model="formData.email" type="email" class="w-full" />
         </UFormField>
 
         <UFormField label="Telefone *" name="phone"  class="w-full" :error="errors.phone">
-          <UInput v-model="formData.phone" v-maska data-maska="['+55 (##) ####-####', '+55 (##) #####-####']" type="text" placeholder="(11) 98765-4321" class="w-full"/>
+          <div class=" flex justify-between gap-2 flex-row">
+            <USelect
+              v-model="selCountryValue"
+              :items="countries"
+              placeholder="DDI"
+
+            />
+            <UInput
+              v-model="formData.phone"
+              v-maska :data-maska="currentMaska"
+              type="text" placeholder="(11) 98765-4321"
+              class="w-full"/>
+          </div>
         </UFormField>
 
         <UFormField label="CPF ou CNPJ *" name="cpf"  class="w-full" :error="errors.cpf">
@@ -110,7 +142,7 @@ const handleSubmit = async () => {
                 { label: 'Homem', value: 'Homem' },
                 { label: 'Mulher', value: 'Mulher' }
               ]"
-            />{{ formData.sex }}
+            />
           </UFormField> 
           
           <UFormField label="Data de nascimento *" name="birth date" class="w-full" :error="errors.birthDate">
@@ -123,10 +155,11 @@ const handleSubmit = async () => {
           <USelect v-model="formData.job" :items="myJobs" class="w-full" />
         </UFormField>
 
-        <UFormField label="Profissão *" name="job" :error="errors.job">
+        <UFormField label="Exemplo de lista de profissões" name="job" :error="errors.job">
           <UInput 
             placeholder="Digite para buscar..."
             list="profissoes"
+            class="w-full"
           />
           <datalist id="profissoes">
             <option v-for="job in newJobs" :value="job.label" />
@@ -136,8 +169,12 @@ const handleSubmit = async () => {
         <UFormField label="Interesses" :error="errors.interests">
           <UCheckboxGroup
             v-model="formData.interests"
-            :items="Uinteresses"
-          />  
+            :items="nowInteresses"
+          /> 
+          <a 
+            @click="numInteresses = Math.min(numInteresses + sumInteresses, interesses.length - 1)" 
+            v-if="interesses.length >= 100" 
+            class="cursor-pointer underline">Carregar mais interesses...</a>
         </UFormField>
 
         <UFormField label="Observações" name="obs" :error="errors.obs">

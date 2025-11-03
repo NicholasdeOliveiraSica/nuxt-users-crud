@@ -73,7 +73,7 @@ onMounted(() => {
 
     <UModal v-model:open="isModalOpen">
       <template #header>
-        <h1 class="text-2xl font-bold">Complete os campos para cadastro!</h1>
+        <h1 class="text-2xl font-bold">Complete os campos para cadastrar!</h1>
       </template>
       <template #body>
         <UAlert v-if="createError" color="error" class="mb-4">
