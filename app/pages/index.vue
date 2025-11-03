@@ -59,7 +59,7 @@ onMounted(() => {
       </template>
     </UAlert>
 
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 m-10 gap-5">
+    <div v-else class="grid grid-cols-2 lg:grid-cols-3 m-10 gap-5">
       <UserCard 
         v-for="user in users" 
         :key="user.id" 
@@ -71,20 +71,27 @@ onMounted(() => {
       />
     </div>
 
-    <UModal v-model:open="isModalOpen">
-      <template #header>
-        <h1 class="text-2xl font-bold">Complete os campos para cadastrar!</h1>
-      </template>
-      <template #body>
-        <UAlert v-if="createError" color="error" class="mb-4">
-          {{ createError }}
-        </UAlert>
-
-        <UserForm
-          @submit="handleCreateUser"
-          @cancel="isModalOpen = false"
-        />
-      </template>
+    <UModal 
+      v-model:open="isModalOpen" 
+      title="Complete os campos para cadastrar!" 
+      description="descrição" 
+      class="md:w-100"
+      #content
+    >
+        <div class="max-w-[100vh] max-h-[100vh] overflow-y-auto">
+          <UCard v-if="createError">
+            <UAlert color="error" class="mb-4 text-2xl text-white" title="Houve algum erro, tente novamente mais tarde" />
+          </UCard>
+          <UCard v-if="!createError">
+            <template #header>
+              <h1 class="text-xl font-bold">Complete os campos para cadastrar!</h1>
+            </template>
+            <UserForm
+              @submit="handleCreateUser"
+              @cancel="isModalOpen = false"
+            />
+          </UCard>
+        </div>
     </UModal>
 
   </div>

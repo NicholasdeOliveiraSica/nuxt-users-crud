@@ -76,10 +76,10 @@ const myJobs = [
 const schema = yup.object({
   name: yup.string().required('Campo obrigatório'),
   email: yup.string().email('Escreva um email válido').required('Campo obrigatório'),
-  phone: yup.string().min(19, 'Número inválido').required('Campo obrigatório'),
+  phone: yup.string().min(10, 'Número inválido').required('Campo obrigatório'),
   cpf: yup.string().min(14, 'CPF ou CNPJ inválido').required('Campo obrigatório'),
   birthDate: yup.string().min(10, 'error in date').required('Campo obrigatório'),
-  sex: yup.string().oneOf(['Homem', 'Mulher'], 'error in radio bttn').required('Campo obrigatório'),
+  sex: yup.string().oneOf(['Homem', 'Mulher', 'Outros'], 'error in radio bttn').required('Campo obrigatório'),
   job: yup.string().required('Campo obrigatório'),
   interests: yup.array().of(yup.string()).min(3, 'Selecione pelo menos 3').required(),
   obs: yup.string().optional().max(200, 'Máximo de 200 caractéres'),
@@ -104,7 +104,7 @@ const handleSubmit = async () => {
 <template>
   <div>
 
-      <UForm :state="formData" @submit.prevent="handleSubmit" :validate-on="['submit']" class="text-xl">
+      <UForm :state="formData" @submit.prevent="handleSubmit" :validate-on="['submit']" class="text-xl flex flex-col gap-2">
 
         <UFormField label="Nome *" name="name" :error="errors.name" class="w-full">
           <UInput v-model="formData.name" type="text" class="w-full"/>
@@ -140,7 +140,8 @@ const handleSubmit = async () => {
               v-model="formData.sex"
               :items="[
                 { label: 'Homem', value: 'Homem' },
-                { label: 'Mulher', value: 'Mulher' }
+                { label: 'Mulher', value: 'Mulher' },
+                { label: 'Outros', value: 'Outros'}
               ]"
             />
           </UFormField> 
@@ -167,14 +168,16 @@ const handleSubmit = async () => {
         </UFormField>
 
         <UFormField label="Interesses" :error="errors.interests">
-          <UCheckboxGroup
-            v-model="formData.interests"
-            :items="nowInteresses"
-          /> 
-          <a 
-            @click="numInteresses = Math.min(numInteresses + sumInteresses, interesses.length - 1)" 
-            v-if="interesses.length >= 100" 
-            class="cursor-pointer underline">Carregar mais interesses...</a>
+          <div class="flex flex-col gap-2">
+            <UCheckboxGroup
+              v-model="formData.interests"
+              :items="nowInteresses"
+            />
+            <a
+              @click="numInteresses = Math.min(numInteresses + sumInteresses, interesses.length - 1)"
+              v-if="interesses.length >= 100"
+              class="cursor-pointer underline">Carregar mais interesses...</a>
+          </div>
         </UFormField>
 
         <UFormField label="Observações" name="obs" :error="errors.obs">
@@ -182,15 +185,22 @@ const handleSubmit = async () => {
             v-model="formData.obs" 
             :maxlength="200"
             placeholder="Observações adicionais..."
+            class="w-full"
           />
         </UFormField>
 
-        <UFormField label="Status" name="active" :error="errors.active">
-          <USwitch v-model="formData.active" />
+        <UFormField label="Status" name="active" :error="errors.active" class="mb-5">
+          <div class=" flex flex-col gap-2">
+            <USwitch v-model="formData.active" />
+            <p v-if="formData.active">Usuário Ativo</p>
+            <p v-if="!formData.active">Usuário Inativo</p>
+          </div>
         </UFormField>
 
-        <UButton @click="emit('cancel')" type="button">Cancelar</UButton>
-        <UButton type="submit">Salvar</UButton>
+        <div class="flex gap-3 justify-between">
+          <UButton @click="emit('cancel')" type="button" class="w-full h-10" variant="outline">Cancelar</UButton>
+          <UButton type="submit" class="w-full h-10">Salvar</UButton>
+        </div>
       </UForm>
   </div>
 </template>
