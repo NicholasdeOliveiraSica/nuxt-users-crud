@@ -6,8 +6,9 @@ import { useJobs } from '@/composables/useJobs'
 import { interesses as listInteresses } from '@/assets/interesses.json'
 import countryList from '@/assets/paises.json'
 
+const errors = ref({})
 const countries = countryList
-const selCountryValue = ref('eua')
+const selCountryValue = ref('brasil')
 
 const selCountry = computed(() => countries.find(item => item.value === selCountryValue.value))
 const currentMaska = computed(() => selCountry.value.mask)
@@ -26,11 +27,6 @@ const sumInteresses = 5
 const numInteresses = ref(4)
 const nowInteresses = computed(() => interesses.filter(item => item.index <= numInteresses.value))
 
-onMounted(() => {
-  console.log(nowInteresses.value)
-})
-
-const errors = ref({})
 const emit = defineEmits(['cancel', 'submit'])
 const formData = ref({
   name: '',
@@ -74,10 +70,10 @@ const myJobs = [
 ]
 
 const schema = yup.object({
-  name: yup.string().required('Campo obrigatório'),
+  name: yup.string().required('Campo obrigatório').min(5, 'Escreva o nome completo'),
   email: yup.string().email('Escreva um email válido').required('Campo obrigatório'),
   phone: yup.string().min(10, 'Número inválido').required('Campo obrigatório'),
-  cpf: yup.string().min(14, 'CPF ou CNPJ inválido').required('Campo obrigatório'),
+  cpf: yup.string().min(14, 'CPF ou CNPJ inválido').required('Campo obrigatório').test('len', 'CPF ou CNPJ inválido', value => value ? value.length === 14 || value.length === 18 : false),
   birthDate: yup.string().min(10, 'error in date').required('Campo obrigatório'),
   sex: yup.string().oneOf(['Homem', 'Mulher', 'Outros'], 'error in radio bttn').required('Campo obrigatório'),
   job: yup.string().required('Campo obrigatório'),
@@ -85,6 +81,15 @@ const schema = yup.object({
   obs: yup.string().optional().max(200, 'Máximo de 200 caractéres'),
   active: yup.boolean().required('Campo obrigatório')
 })
+
+const validateField = async (fieldName) => {
+  try {
+    await schema.validateAt(fieldName, formData.value)
+    delete errors.value[fieldName]
+  } catch (err) {
+    errors.value[fieldName] = err.message
+  }
+}
 
 const handleSubmit = async () => {
   try {
@@ -107,11 +112,11 @@ const handleSubmit = async () => {
       <UForm :state="formData" @submit.prevent="handleSubmit" :validate-on="['submit']" class="text-xl flex flex-col gap-2">
 
         <UFormField label="Nome *" name="name" :error="errors.name" class="w-full">
-          <UInput v-model="formData.name" type="text" class="w-full"/>
+          <UInput v-model="formData.name" type="text" class="w-full" @blur="validateField('name')"/>
         </UFormField>
 
         <UFormField label="Email *" name="email" class="w-full" :error="errors.email" >
-          <UInput v-model="formData.email" type="email" class="w-full" />
+          <UInput v-model="formData.email" type="email" class="w-full" @blur="validateField('email')" />
         </UFormField>
 
         <UFormField label="Telefone *" name="phone"  class="w-full" :error="errors.phone">
@@ -126,12 +131,19 @@ const handleSubmit = async () => {
               v-model="formData.phone"
               v-maska :data-maska="currentMaska"
               type="text" placeholder="(11) 98765-4321"
-              class="w-full"/>
+              class="w-full"
+              @blur="validateField('phone')"/>
           </div>
         </UFormField>
 
         <UFormField label="CPF ou CNPJ *" name="cpf"  class="w-full" :error="errors.cpf">
-          <UInput v-model="formData.cpf" type="text" v-maska data-maska="['###.###.###-##', '##.###.###/####-##']" placeholder="CPF ou CNPJ" class="w-full"/>
+          <UInput 
+            v-model="formData.cpf" 
+            type="text" v-maska 
+            data-maska="['###.###.###-##', '##.###.###/####-##']" 
+            placeholder="CPF ou CNPJ" class="w-full"
+            @blur="validateField('cpf')"
+            />
         </UFormField>
         
         <div class="flex w-full justify-between">
@@ -147,16 +159,16 @@ const handleSubmit = async () => {
           </UFormField> 
           
           <UFormField label="Data de nascimento *" name="birth date" class="w-full" :error="errors.birthDate">
-            <UInput v-model="formData.birthDate" type="date" class="w-full h-10"/>
+            <UInput v-model="formData.birthDate" type="date" class="w-full h-10" @blur="validateField('birthDate')"/>
           </UFormField>
         </div>
         
 
         <UFormField label="Trabalho *" name="Job" class="w-full" :error="errors.job">
-          <USelect v-model="formData.job" :items="myJobs" class="w-full" />
+          <USelect v-model="formData.job" :items="myJobs" class="w-full" @change="validateField('job')" />
         </UFormField>
 
-        <UFormField label="Exemplo de lista de profissões" name="job" :error="errors.job">
+        <UFormField label="Exemplo de lista de profissões" name="exemple-job">
           <UInput 
             placeholder="Digite para buscar..."
             list="profissoes"
@@ -172,6 +184,7 @@ const handleSubmit = async () => {
             <UCheckboxGroup
               v-model="formData.interests"
               :items="nowInteresses"
+              @update:model-value="validateField('interests')"
             />
             <a
               @click="numInteresses = Math.min(numInteresses + sumInteresses, interesses.length - 1)"
@@ -186,6 +199,7 @@ const handleSubmit = async () => {
             :maxlength="200"
             placeholder="Observações adicionais..."
             class="w-full"
+            @blur="validateField('obs')"
           />
         </UFormField>
 
@@ -198,9 +212,9 @@ const handleSubmit = async () => {
         </UFormField>
 
         <div class="flex gap-3 justify-between">
-          <UButton @click="emit('cancel')" type="button" class="w-full h-10" variant="outline">Cancelar</UButton>
-          <UButton type="submit" class="w-full h-10">Salvar</UButton>
+          <UButton @click="emit('cancel')" type="button" class="w-full h-10 text-center" variant="outline" label="Cancelar"></UButton>
+          <UButton type="submit" class="w-full h-10 text-center">Salvar</UButton>
         </div>
-      </UForm>
+      </UForm> 
   </div>
 </template>
