@@ -1,24 +1,72 @@
 <script setup>
 import { useUsers } from '../composables/useUsers'
 
-const { users, loading, error, getUsers, createUser } = useUsers()
+const { users, loading, error, getUsers, createUser, editUser, deleteUser } = useUsers()
 const isModalOpen = ref(false)
 const createError = ref(null)
+const userToEdit = ref(null)
 
-const handleCreateUser = async (userData) => {
+
+const handleCreateNew = () => {
+  isModalOpen.value = true
+  userToEdit.value = null
+}
+
+const handleEditUser = (user) => {
+  isModalOpen.value = true
+  userToEdit.value = user
+}
+
+const handleCancel = () => {
+  isModalOpen.value = false
+  userToEdit.value = null
+}
+
+const handleDeleteUser = async (userID) => {
   try {
-    await createUser(userData)
+    await deleteUser(userID)
   } catch (err) {
     createError.value = err
   } finally {
     await getUsers()
     isModalOpen.value = false
+    userToEdit.value = null
+  }
+}
+
+const submitForm = async (userData) => {
+  if(userToEdit.value) {
+    try {
+      await editUser(userData)
+
+    } catch (err) {
+      createError.value = err
+
+    } finally {
+      await getUsers()
+      isModalOpen.value = false
+      userToEdit.value = null
+    }
+
+  } else {
+    try {
+      await createUser(userData)
+
+    } catch (err) {
+      createError.value = err
+
+    } finally {
+      await getUsers()
+      isModalOpen.value = false
+      userToEdit.value = null
+    }
   }
 }
 
 onMounted(() => {
   getUsers()
 })
+
 </script>
 
 <template>
@@ -29,7 +77,7 @@ onMounted(() => {
 
     <div class="flex flex-col gap-3 w-full max-w-80 lg:max-w-124 md:max-w-124 text-center">
       <h1 class="text-4xl font-bold">Lista de usuários cadastrados</h1>
-      <UButton color="primary" variant="outline" class="w-full text-xl" @click="isModalOpen = true">
+      <UButton color="primary" variant="outline" class="w-full text-xl" @click="handleCreateNew">
         Novo usuário
       </UButton>
     </div>
@@ -68,10 +116,12 @@ onMounted(() => {
         :sex="user.sex"
         :active="user.active"
         :avatar="user.img"
+        :userObj="user"
+        @edit-user="handleEditUser"
       />
     </div>
 
-    <UModal 
+    <UModal
       v-model:open="isModalOpen" 
       title="Complete os campos para cadastrar!" 
       description="Formulário para cadastro de novos Usuários, ou resposta ao erro do servidor" 
@@ -87,8 +137,10 @@ onMounted(() => {
               <h1 class="text-xl font-bold">Complete os campos para cadastrar!</h1>
             </template>
             <UserForm
-              @submit="handleCreateUser"
-              @cancel="isModalOpen = false"
+              :user="userToEdit"
+              @delete-user="handleDeleteUser"
+              @submit="submitForm"
+              @cancel="handleCancel"
             />
           </UCard>
         </div>

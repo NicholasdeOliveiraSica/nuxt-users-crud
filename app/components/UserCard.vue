@@ -8,8 +8,15 @@
         phone: String,
         sex: String,
         avatar: String,
-        active: Boolean 
+        active: Boolean,
+        userObj: Object 
     })
+    const emit = defineEmits([
+      'edit-user'
+    ])
+    const editUser = () => {
+      emit('edit-user', props.userObj)
+    }
 </script>
 
 <template>
@@ -29,7 +36,7 @@
           </div>
           <div class="flex flex-col gap-1">
             <UIcon name="i-lucide-eye" size="23" class="hover:scale-120 cursor-pointer" />
-            <UIcon name="i-lucide-pencil" size="20" class="hover:scale-120 cursor-pointer" />
+            <UIcon name="i-lucide-pencil" size="20" class="hover:scale-120 cursor-pointer" @click="editUser" />
           </div>
         </div>
       </template>

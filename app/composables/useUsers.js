@@ -28,11 +28,10 @@ export const useUsers = () => {
   const createUser = async (userData) => {
     loading.value = true
     try {
-      const response = await $fetch(`${API_URL}/usuarios`, {
+      await $fetch(`${API_URL}/usuarios`, {
         method: 'POST',
         body: userData
       })
-      console.log(response)
     } catch (error) {
       
     } finally {
@@ -40,12 +39,39 @@ export const useUsers = () => {
     }
   }
 
+  const editUser = async (userData) => {
+    loading.value = true
+    try {
+      await $fetch(`${API_URL}/usuarios/${userData.id}`, {
+        method: 'PUT',
+        body: userData
+      })
+    } catch (error) {
+      
+    } finally {
+      loading.value = false
+    }
+  }
+  const deleteUser = async (userID) => {
+    loading.value = true
+    try {
+      await $fetch(`${API_URL}/usuarios/${userID}`, {
+        method: 'DELETE'
+      })
+    } catch (er) {
+      
+    } finally {
+      loading.value = false
+    }
+  }
 
   return {
     users,
     loading,
     error,
     getUsers,
-    createUser
+    createUser,
+    editUser,
+    deleteUser
   }
 }

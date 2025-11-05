@@ -1,4 +1,3 @@
-
 <script setup>
 
 import * as yup from 'yup'
@@ -6,7 +5,14 @@ import { useJobs } from '@/composables/useJobs'
 import { interesses as listInteresses } from '@/assets/interesses.json'
 import countryList from '@/assets/paises.json'
 
+const props = defineProps({
+  user: Object
+})
+const loading = ref(false)
 const errors = ref({})
+const confirmError = ref(null)
+const confirmDelete = ref(false)
+const dateConfirm = ref(null)
 const countries = countryList
 const selCountryValue = ref('brasil')
 
@@ -16,6 +22,18 @@ const currentMaska = computed(() => selCountry.value.mask)
 watch(selCountryValue, () => {
   formData.value.phone = ''
 })
+
+const tryDelete = () => {
+  loading.value = true
+  if (dateConfirm.value === formData.value.birthDate) {
+    emit('delete-user', props.user.id)
+    confirmError.value = null
+  } else {
+    console.log('nao passou no if')
+    confirmError.value = 'Data de nascimento incorreta, tente novamente'
+  }
+  loading.value = false
+}
 
 const { newJobs } = useJobs()
 const interesses = listInteresses.map((item, index) => ({
@@ -27,14 +45,14 @@ const sumInteresses = 5
 const numInteresses = ref(4)
 const nowInteresses = computed(() => interesses.filter(item => item.index <= numInteresses.value))
 
-const emit = defineEmits(['cancel', 'submit'])
+const emit = defineEmits(['cancel', 'submit', 'delete-user'])
 const formData = ref({
   name: '',
   email: '',
   phone: '',
   cpf: '',
   birthDate: '',
-  sex: 'Homem',
+  sex: 'male',
   job: '',
   interests: [],
   obs: '',
@@ -75,7 +93,7 @@ const schema = yup.object({
   phone: yup.string().min(10, 'Número inválido').required('Campo obrigatório'),
   cpf: yup.string().min(14, 'CPF ou CNPJ inválido').required('Campo obrigatório').test('len', 'CPF ou CNPJ inválido', value => value ? value.length === 14 || value.length === 18 : false),
   birthDate: yup.string().min(10, 'error in date').required('Campo obrigatório'),
-  sex: yup.string().oneOf(['Homem', 'Mulher', 'Outros'], 'error in radio bttn').required('Campo obrigatório'),
+  sex: yup.string().oneOf(['male', 'female', 'other'], 'error in radio bttn').required('Campo obrigatório'),
   job: yup.string().required('Campo obrigatório'),
   interests: yup.array().of(yup.string()).min(3, 'Selecione pelo menos 3').required(),
   obs: yup.string().optional().max(200, 'Máximo de 200 caractéres'),
@@ -103,6 +121,12 @@ const handleSubmit = async () => {
   }
 
 }
+
+onMounted(() => {
+  if(props.user) {
+    formData.value = props.user
+  }
+})
 
 </script>
 
@@ -151,9 +175,9 @@ const handleSubmit = async () => {
             <URadioGroup
               v-model="formData.sex"
               :items="[
-                { label: 'Homem', value: 'Homem' },
-                { label: 'Mulher', value: 'Mulher' },
-                { label: 'Outros', value: 'Outros'}
+                { label: 'Homem', value: 'male' },
+                { label: 'Mulher', value: 'female' },
+                { label: 'Outros', value: 'other'}
               ]"
             />
           </UFormField> 
@@ -203,18 +227,39 @@ const handleSubmit = async () => {
           />
         </UFormField>
 
-        <UFormField label="Status" name="active" :error="errors.active" class="mb-5">
-          <div class=" flex flex-col gap-2">
-            <USwitch v-model="formData.active" />
-            <p v-if="formData.active">Usuário Ativo</p>
-            <p v-if="!formData.active">Usuário Inativo</p>
-          </div>
-        </UFormField>
-
+        <div>
+          <UFormField label="Status" name="active" :error="errors.active" class="mb-5">
+            <div class=" flex flex-col gap-2">
+              <USwitch v-model="formData.active" />
+              <p v-if="formData.active">Usuário Ativo</p>
+              <p v-if="!formData.active">Usuário Inativo</p>
+            </div>
+          </UFormField>
+        </div>
+        
+        <UButton v-if="user" type="submit" class="w-full h-10 text-center flex justify-center text-lg">Salvar</UButton>
         <div class="flex gap-3 justify-between">
-          <UButton @click="emit('cancel')" type="button" class="w-full h-10 text-center" variant="outline" label="Cancelar"></UButton>
-          <UButton type="submit" class="w-full h-10 text-center">Salvar</UButton>
+          <UButton v-if="user" @click="{confirmDelete = true; console.log(confirmDelete)}" type="button" class="w-full h-10 text-center flex justify-center text-lg" color="error" variant="outline" label="Deletar Usuário"></UButton>
+          <UButton @click="emit('cancel')" type="button" class="w-full h-10 text-center flex justify-center text-lg" variant="outline" label="Cancelar"></UButton>
+          <UButton v-if="!user" type="submit" class="w-full h-10 text-center flex justify-center text-lg">Salvar</UButton>
         </div>
       </UForm> 
+      <UModal v-model:open="confirmDelete" title="Confirmation of delete user" description="A modal to confirmate if you realy want to delete this user" #content>
+        <UCard>
+          <template #header>
+            <h1>Deletar {{ formData.name }}?</h1>
+          </template>
+          <form class="-mt-3 flex flex-col gap-2">
+            <p>Realmente deseja deletar este usuário do banco de dados?</p>
+            <p>Confirme a data de nascimento abaixo:</p>
+            <UInput type="date" v-model="dateConfirm" :error="confirmError"/>
+            {{ dateConfirm }} {{ formData.birthDate }} {{ dateConfirm === formData.birthDate }}
+            <div class="flex justify-between gap-2 mt-4">
+              <UButton label="Confirmar" :disabled="loading" @click="tryDelete" color="error" variant="solid" class="w-full flex justify-center h-10 cursor-pointer"/>
+              <UButton label="Cancelar" variant="outline" class="w-full flex justify-center h-10 cursor-pointer"/>
+            </div>
+          </form>
+        </UCard>
+      </UModal>
   </div>
 </template>
