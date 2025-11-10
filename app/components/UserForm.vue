@@ -35,6 +35,14 @@ const tryDelete = () => {
   loading.value = false
 }
 
+const disabledBttn = ref(false)
+
+const cancelDelete = () => {
+  confirmDelete.value = false
+  dateConfirm.value = ''
+  confirmError.value = null
+}
+
 const { newJobs } = useJobs()
 const interesses = listInteresses.map((item, index) => ({
   index: index,
@@ -110,6 +118,7 @@ const validateField = async (fieldName) => {
 }
 
 const handleSubmit = async () => {
+  disabledBttn.value = true
   try {
     await schema.validate(formData.value, { abortEarly: false})
     errors.value = {}
@@ -175,8 +184,8 @@ onMounted(() => {
             <URadioGroup
               v-model="formData.sex"
               :items="[
-                { label: 'Homem', value: 'male' },
-                { label: 'Mulher', value: 'female' },
+                { label: 'Masculino', value: 'male' },
+                { label: 'Feminino', value: 'female' },
                 { label: 'Outros', value: 'other'}
               ]"
             />
@@ -239,9 +248,9 @@ onMounted(() => {
         
         <UButton v-if="user" type="submit" class="w-full h-10 text-center flex justify-center text-lg">Salvar</UButton>
         <div class="flex gap-3 justify-between">
-          <UButton v-if="user" @click="{confirmDelete = true; console.log(confirmDelete)}" type="button" class="w-full h-10 text-center flex justify-center text-lg" color="error" variant="outline" label="Deletar Usuário"></UButton>
+          <UButton v-if="user" @click="confirmDelete = true" type="button" class="w-full h-10 text-center flex justify-center text-lg" color="error" variant="outline" label="Deletar Usuário"></UButton>
           <UButton @click="emit('cancel')" type="button" class="w-full h-10 text-center flex justify-center text-lg" variant="outline" label="Cancelar"></UButton>
-          <UButton v-if="!user" type="submit" class="w-full h-10 text-center flex justify-center text-lg">Salvar</UButton>
+          <UButton v-if="!user" :disabled="disabledBttn" type="submit" class="w-full h-10 text-center flex justify-center text-lg">Salvar</UButton>
         </div>
       </UForm> 
       <UModal v-model:open="confirmDelete" title="Confirmation of delete user" description="A modal to confirmate if you realy want to delete this user" #content>
@@ -252,11 +261,24 @@ onMounted(() => {
           <form class="-mt-3 flex flex-col gap-2">
             <p>Realmente deseja deletar este usuário do banco de dados?</p>
             <p>Confirme a data de nascimento abaixo:</p>
-            <UInput type="date" v-model="dateConfirm" :error="confirmError"/>
-            {{ dateConfirm }} {{ formData.birthDate }} {{ dateConfirm === formData.birthDate }}
+            <UFormField :error="confirmError">
+              <UInput type="date" v-model="dateConfirm" class="w-full"/>
+            </UFormField>
             <div class="flex justify-between gap-2 mt-4">
-              <UButton label="Confirmar" :disabled="loading" @click="tryDelete" color="error" variant="solid" class="w-full flex justify-center h-10 cursor-pointer"/>
-              <UButton label="Cancelar" variant="outline" class="w-full flex justify-center h-10 cursor-pointer"/>
+              <UButton 
+                label="Confirmar" 
+                :disabled="loading" 
+                @click="tryDelete" 
+                color="error" 
+                variant="solid" 
+                class="w-full flex justify-center h-10 cursor-pointer"
+              />
+              <UButton 
+                label="Cancelar" 
+                @click="cancelDelete" 
+                variant="outline" 
+                class="w-full flex justify-center h-10 cursor-pointer"
+              />
             </div>
           </form>
         </UCard>

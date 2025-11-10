@@ -2,6 +2,7 @@
 import { useUsers } from '../composables/useUsers'
 
 const { users, loading, error, getUsers, createUser, editUser, deleteUser } = useUsers()
+
 const isModalOpen = ref(false)
 const createError = ref(null)
 const userToEdit = ref(null)
