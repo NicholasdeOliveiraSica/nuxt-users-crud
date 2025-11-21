@@ -24,6 +24,22 @@ export const useUsers = () => {
       loading.value = false
     }
   }
+  const getUserByID = async (userID) => {
+    loading.value = true
+    error.value = null
+    
+    try {
+      const data = await $fetch(`${API_URL}/usuarios/${userID}`)
+      return data
+
+    } catch (err) {
+      error.value = err.message || "erro ao buscar usuarios"
+      return 'Houve algum problema ao carregar o usuário'
+
+    } finally {
+      loading.value = false
+    }
+  }
 
   const createUser = async (userData) => {
     loading.value = true
@@ -70,6 +86,7 @@ export const useUsers = () => {
     loading,
     error,
     getUsers,
+    getUserByID,
     createUser,
     editUser,
     deleteUser
