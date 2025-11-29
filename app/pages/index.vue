@@ -18,6 +18,10 @@ const handleEditUser = (user) => {
   userToEdit.value = user
 }
 
+const handleViewUser = (userID) => {
+  return navigateTo(`/user/${userID}`)
+}
+
 const handleCancel = () => {
   isModalOpen.value = false
   userToEdit.value = null
@@ -112,13 +116,9 @@ onMounted(() => {
       <UserCard 
         v-for="user in users" 
         :key="user.id" 
-        :name="user.name"
-        :phone="user.phone"
-        :sex="user.sex"
-        :active="user.active"
-        :avatar="user.img"
-        :userObj="user"
+        :user="user"
         @edit-user="handleEditUser"
+        @view-user="handleViewUser"
       />
     </div>
 
