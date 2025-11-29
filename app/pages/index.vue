@@ -112,7 +112,7 @@ onMounted(() => {
       </template>
     </UAlert>
 
-    <div v-else class="grid grid-cols-2 lg:grid-cols-3 m-10 gap-5">
+    <div v-else class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 m-10 gap-5">
       <UserCard 
         v-for="user in users" 
         :key="user.id" 
