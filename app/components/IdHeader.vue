@@ -1,24 +1,37 @@
+
 <script setup>
-  const emits = defineEmits(['editUser', 'backPage'])
+  const emit = defineEmits([
+    'edit-user', 'back-page'
+  ])
+  const backPage = () => {
+    console.log('clicou')
+    emit('back-page')
+  }
+  const editUser = () => {
+    emit('edit-user')
+  }
 </script>
 
 
 <template>
+
   <div class="w-full flex justify-between">
+
     <UButton 
       color="primary" 
       icon="i-lucide-arrow-left" 
       variant="ghost"
-      @click="$emit('backPage')"
-      >
-      Voltar
+      @click="backPage"
+      > Voltar
     </UButton>
+
     <UButton 
       color="primary" 
       icon="i-lucide-pencil"
-      @click="$emit('editUser')"
-      >
-      Editar
+      @click="editUser"
+      > Editar
     </UButton>
+
   </div>
+
 </template>

@@ -4,6 +4,14 @@
   const { getUserByID } = useUsers()
 
   const user = ref('')
+
+  const handleBackPage = () => {
+    navigateTo('/')
+  }
+
+  const handleEditUser = () => {
+
+  }
   
   onMounted(async () => {
     const { params } = useRoute()
@@ -15,7 +23,10 @@
 
 <template>
   <div class="flex flex-col w-full max-w-180 p-5 gap-5">
-    <IdHeader/>
+    <IdHeader
+      @back-page="handleBackPage"
+      @edit-user="handleEditUser"
+    />
     <UCard>
       <template #header>
         <div>
