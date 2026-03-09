@@ -2,6 +2,9 @@
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
+Project Deployed on CloudFlare
+https://b9e9dd68.nuxt-users-crud.pages.dev/
+
 ## Setup
 
 Make sure to install dependencies:
